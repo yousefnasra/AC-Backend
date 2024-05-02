@@ -24,3 +24,8 @@ export const createProduct = joi.object({
 export const deleteProduct = joi.object({
     id: joi.string().custom(ObjectIdValidation).required(),
 }).required();
+
+// get product
+export const getProduct = joi.object({
+    id: joi.string().custom(ObjectIdValidation).required(),
+}).required();

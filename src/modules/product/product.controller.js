@@ -85,3 +85,11 @@ export const allProducts = asyncHandler(async (req, res, next) => {
     return res.json({ success: true, message: "products found successfully!", results });
 });
 
+// get product
+export const getProduct = asyncHandler(async (req, res, next) => {
+    // check product
+    const product = await Product.findById(req.params.id);
+    if (!product) return next(new Error("product not found!", { cause: 404 }));
+    // return response
+    return res.json({ success: true, message: "product found successfully!", results:{product} });
+});

@@ -40,4 +40,10 @@ router.get(
     productController.allProducts
 );
 
+// get product
+router.get(
+    "/:id",
+    productController.getProduct
+);
+
 export default router;
