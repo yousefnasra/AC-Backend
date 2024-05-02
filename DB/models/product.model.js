@@ -55,7 +55,7 @@ productSchema.virtual("finalPrice").get(function () {
 // query helper to paginate
 productSchema.query.paginate = function (page) {
     page = page < 1 || isNaN(page) || !page ? 1 : page;
-    const limit = 2; // 2 products per page
+    const limit = 12; // 12 products per page
     const skip = limit * (page - 1);
     // this >> query
     return this.skip(skip).limit(limit);
