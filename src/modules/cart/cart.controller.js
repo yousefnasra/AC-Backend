@@ -66,7 +66,7 @@ export const updateUserCart = asyncHandler(async (req, res, next) => {
         { user: req.user._id, "products.productId": productId },
         { "products.$.quantity": quantity },
         { new: true }
-    );
+    ).populate("products.productId");
     // send response
     return res.json({ success: true, results: { cart } });
 });
@@ -83,7 +83,7 @@ export const removeFromCart = asyncHandler(async (req, res, next) => {
         { user: req.user._id },
         { $pull: { products: { productId } } },
         { new: true }
-    );
+    ).populate("products.productId");
     // send response
     return res.json({ success: true, results: { cart } });
 });
