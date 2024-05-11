@@ -33,7 +33,7 @@ const productSchema = new Schema({
     category: { type: Types.ObjectId, ref: "Category", required: true },
     brand: { type: Types.ObjectId, ref: "Brand", required: true },
     cloudFolder: { type: String, unique: true, required: true },
-    averageRate: { type: Number, min: 1, max: 5 },
+    averageRate: { type: Number, min: 1, max: 5, default: 4.8 },
 },
     { timestamps: true, strictQuery: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

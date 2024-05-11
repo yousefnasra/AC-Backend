@@ -17,4 +17,9 @@ router.patch("/:id", isAuthenticated, isAuthorized("user"), validation(orderSche
 // webhook end >>> stripe
 router.post('/webhook', express.raw({ type: 'application/json' }), orderController.orderWebhook); //req.body >> buffer
 
+// get user order
+router.get("/", isAuthenticated, isAuthorized("user"), orderController.getUserOrders);
+
+router.get("/allorders", isAuthenticated, isAuthorized("admin"), orderController.getAllOrders);
+
 export default router;
