@@ -66,7 +66,6 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
 export const allProducts = asyncHandler(async (req, res, next) => {
     // data from request
     const { sort, keyword, category, brand } = req.query;
-    let { page } = req.query;
     // check category existence 
     if (category && !await Category.findById(category))
         return next(new Error("category not found!", { casue: 404 }));
@@ -76,7 +75,6 @@ export const allProducts = asyncHandler(async (req, res, next) => {
     // find products with filters
     const results = await Product.find({ ...req.query })
         .sort(sort)
-        .paginate(page) // only two products per page
         .search(keyword); 
     // check if there is no products
     if (results.length == 0)
