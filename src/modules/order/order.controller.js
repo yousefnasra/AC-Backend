@@ -56,10 +56,12 @@ export const createOrder = asyncHandler(async (req, res, next) => {
             discount: checkCoupon?.discount,
         },
     });
-    // update stock
-    updateStock(order.products, true);
-    // clear cart
-    clearCart(req.user._id);
+    if (payment === "cash") {
+        // update stock
+        updateStock(order.products, true);
+        // clear cart
+        clearCart(req.user._id);
+    }
     // check if payment = visa
     if (payment === 'visa') {
         // stripe gateway
@@ -133,7 +135,11 @@ export const orderWebhook = asyncHandler(async (request, response) => {
     const orderId = event.data.object.metadata.order_id;
     if (event.type === "checkout.session.completed") {
         // change order status
-        await Order.findOneAndUpdate({ _id: orderId }, { status: "visa payed" });
+        const order = await Order.findOneAndUpdate({ _id: orderId }, { status: "visa payed" });
+        // update stock
+        updateStock(order.products, true);
+        // clear cart
+        clearCart(order.user);
         return;
     }
 
