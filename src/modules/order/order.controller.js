@@ -150,6 +150,7 @@ export const orderWebhook = asyncHandler(async (request, response) => {
 // get user Orders
 export const getUserOrders = asyncHandler(async (req, res, next) => {
     // check order
+    await Order.deleteMany({ user: req.user._id, status: "placed", payment: "visa" });
     const order = await Order.find({ user: req.user._id }).populate("products.productId");
     // send response
     return res.json({ success: true, message: "orders founded successfully!", results: { order } });
@@ -158,6 +159,7 @@ export const getUserOrders = asyncHandler(async (req, res, next) => {
 // get all Orders
 export const getAllOrders = asyncHandler(async (req, res, next) => {
     // check order
+    await Order.deleteMany({ status: "placed", payment: "visa" });
     const order = await Order.find();
     // send response
     return res.json({ success: true, message: "orders founded successfully!", results: { order } });
