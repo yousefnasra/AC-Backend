@@ -50,7 +50,7 @@ export const activateAccount = asyncHandler(async (req, res, next) => {
     // create a wishlist 
     await Wishlist.create({ user: user._id });
     // send response
-    return res.json({ success: true, message: "you can login now!" });
+    return res.redirect('https://ac-frontend.vercel.app/login');
 });
 
 // Login 
