@@ -108,7 +108,7 @@ export const cancelOrder = asyncHandler(async (req, res, next) => {
     const order = await Order.findById(req.params.id);
     if (!order) return next(new Error("invalid order id!", { cause: 400 }));
     // check status
-    if (!order.status === "placed")
+    if (order.status !== "placed")
         return next(new Error("can not cancel the order!", { cause: 400 }));
     // cancel order
     order.status = "canceled";
