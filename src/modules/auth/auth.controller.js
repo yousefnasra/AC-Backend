@@ -89,7 +89,7 @@ export const forgetCode = asyncHandler(async (req, res, next) => {
         return next(new Error("you must activate your account first!", { cause: 401 }));
     // generate forget code
     const forgetCode = Randomstring.generate({
-        charset: "numeric",
+        charset: "alphanumeric",
         length: 6,
     });
     // send email
@@ -117,8 +117,25 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
     if (!user)
         return next(new Error("invalid email!", { cause: 404 }));
     // check the forget code
-    if (forgetCode !== user.forgetCode)
-        return next(new Error("invalid code!", { cause: 400 }));
+    if (forgetCode !== user.forgetCode) {
+        const newForgetCode = Randomstring.generate({
+            charset: "alphanumeric",
+            length: 6,
+        });
+        // send email
+        const messageSent = await sendEmail({
+            to: email,
+            subject: "Reset Password",
+            html: resetPassTemp(newForgetCode)
+        });
+        // check if email does not send
+        if (!messageSent)
+            return next(new Error("something went wrong!", { cause: 400 }));
+        // save forget code in user model
+        user.forgetCode = newForgetCode;
+        await user.save();
+        return next(new Error("invalid code, new code has been resent!", { cause: 400 }));
+    }
     // hash password (using hook) and save in user model
     user.password = password;
     await user.save();

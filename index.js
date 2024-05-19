@@ -11,6 +11,7 @@ import wishlistRouter from "./src/modules/wishlist/wishlist.router.js";
 import orderRouter from "./src/modules/order/order.router.js";
 import morgan from "morgan";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 const app = express();
@@ -53,7 +54,15 @@ app.use((req, res, next) => {
 app.use(morgan("combined"));
 
 // routers
-app.use("/auth", authRouter);
+// Configure the rate limiter for the forgetCode route
+const authLimiter = rateLimit({
+    windowMs: 30 * 60 * 1000, // 30 minutes
+    max: 8, // limit each IP to 10 requests per windowMs
+    handler: function (req, res, next) {
+        return next(new Error("Too many requests, please try again later.", { cause: 429 }));
+    }
+});
+app.use("/auth", authLimiter, authRouter);
 app.use("/category", categoryRouter);
 app.use("/brand", brandRouter);
 app.use("/coupon", couponRouter);
